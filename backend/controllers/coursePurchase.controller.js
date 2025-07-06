@@ -203,7 +203,7 @@ export const createCheckoutSession = async (req, res) => {
         await user.save();
         // --- END NEW LOGIC ---
 
-        const success_url = `http://localhost:3000/course-progress/${courseId}`;
+        const success_url = `https://lms-taupe-two.vercel.app/course-progress/${courseId}`;
         const cancel_url = `http://localhost:3000/course-detail/${courseId}`; // This variable is not used but kept for context
 
         return res.status(200).json({

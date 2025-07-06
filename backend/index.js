@@ -57,10 +57,15 @@ import mediaRoute from "./routes/media.route.js";
 import purchaseRoute from "./routes/purchaseCourse.route.js";
 import courseProgressRoute from "./routes/courseProgress.route.js";
 import path from "path";
+import { fileURLToPath } from 'url'; // Import fileURLToPath
+
+// Define __filename and __dirname for ES module scope
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 
-const _dirname = path.resolve();
+
 
 dotenv.config({});
 
@@ -86,15 +91,12 @@ app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/purchase", purchaseRoute);
 app.use("/api/v1/progress", courseProgressRoute);
 
-// Serve static files from the client/dist directory
-// This handles your frontend's built assets (HTML, CSS, JS, images, etc.)
-app.use(express.static(path.join(_dirname, "/frontend/dist")));
-
-// For any other GET request, serve the index.html file
-// This is crucial for single-page applications (SPAs) to handle client-side routing
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 app.get('*', (req, res) => {
-    res.sendFile(path.resolve(_dirname,"frontend","dist","index.html"));
+    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
 });
+
+
 
 app.listen(PORT, () => {
     console.log(`Server listening at port ${PORT}`);
