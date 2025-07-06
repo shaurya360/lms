@@ -47,10 +47,7 @@ const AddCourse = () => {
         <h1 className="font-bold text-xl">
           Lets add course, add some basic course details for your new course
         </h1>
-        <p className="text-sm">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus,
-          laborum!
-        </p>
+        
       </div>
       <div className="space-y-4">
         <div>
@@ -64,32 +61,74 @@ const AddCourse = () => {
         </div>
         <div>
           <Label>Category</Label>
-          <Select onValueChange={getSelectedCategory}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Category</SelectLabel>
-                <SelectItem value="Next JS">Next JS</SelectItem>
-                <SelectItem value="Data Science">Data Science</SelectItem>
-                <SelectItem value="Frontend Development">
-                  Frontend Development
-                </SelectItem>
-                <SelectItem value="Fullstack Development">
-                  Fullstack Development
-                </SelectItem>
-                <SelectItem value="MERN Stack Development">
-                  MERN Stack Development
-                </SelectItem>
-                <SelectItem value="Javascript">Javascript</SelectItem>
-                <SelectItem value="Python">Python</SelectItem>
-                <SelectItem value="Docker">Docker</SelectItem>
-                <SelectItem value="MongoDB">MongoDB</SelectItem>
-                <SelectItem value="HTML">HTML</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <Label>Category</Label>
+<Select onValueChange={getSelectedCategory}>
+  <SelectTrigger className="w-[250px]"> {/* Increased width for longer names */}
+    <SelectValue placeholder="Select a category" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectGroup>
+      <SelectLabel>Web Development</SelectLabel>
+      <SelectItem value="Frontend Development">Frontend Development</SelectItem>
+      <SelectItem value="Backend Development">Backend Development</SelectItem>
+      <SelectItem value="Fullstack Development">Fullstack Development</SelectItem>
+      <SelectItem value="Next JS">Next JS</SelectItem>
+      <SelectItem value="React JS">React JS</SelectItem>
+      <SelectItem value="Angular">Angular</SelectItem>
+      <SelectItem value="Vue JS">Vue JS</SelectItem>
+      <SelectItem value="HTML">HTML</SelectItem>
+      <SelectItem value="CSS">CSS</SelectItem>
+      <SelectItem value="Tailwind CSS">Tailwind CSS</SelectItem>
+
+      <SelectLabel>Programming Languages</SelectLabel>
+      <SelectItem value="Javascript">Javascript</SelectItem>
+      <SelectItem value="Python">Python</SelectItem>
+      <SelectItem value="Java">Java</SelectItem>
+      <SelectItem value="C#">C#</SelectItem>
+      <SelectItem value="GoLang">GoLang</SelectItem>
+      <SelectItem value="Rust">Rust</SelectItem>
+      <SelectItem value="PHP">PHP</SelectItem>
+      <SelectItem value="TypeScript">TypeScript</SelectItem>
+
+      <SelectLabel>Data & AI</SelectLabel>
+      <SelectItem value="Data Science">Data Science</SelectItem>
+      <SelectItem value="Machine Learning">Machine Learning</SelectItem>
+      <SelectItem value="Deep Learning">Deep Learning</SelectItem>
+      <SelectItem value="Artificial Intelligence">Artificial Intelligence</SelectItem>
+      <SelectItem value="Data Analytics">Data Analytics</SelectItem>
+      <SelectItem value="Big Data">Big Data</SelectItem>
+      <SelectItem value="SQL">SQL</SelectItem>
+      <SelectItem value="NoSQL Databases">NoSQL Databases</SelectItem>
+      <SelectItem value="MongoDB">MongoDB</SelectItem>
+      <SelectItem value="PostgreSQL">PostgreSQL</SelectItem>
+
+      <SelectLabel>Cloud & DevOps</SelectLabel>
+      <SelectItem value="Cloud Computing">Cloud Computing</SelectItem>
+      <SelectItem value="AWS">AWS</SelectItem>
+      <SelectItem value="Azure">Azure</SelectItem>
+      <SelectItem value="Google Cloud Platform">Google Cloud Platform</SelectItem>
+      <SelectItem value="DevOps">DevOps</SelectItem>
+      <SelectItem value="Docker">Docker</SelectItem>
+      <SelectItem value="Kubernetes">Kubernetes</SelectItem>
+      <SelectItem value="CI/CD">CI/CD</SelectItem>
+
+      <SelectLabel>Mobile Development</SelectLabel>
+      <SelectItem value="Android Development">Android Development</SelectItem>
+      <SelectItem value="iOS Development">iOS Development</SelectItem>
+      <SelectItem value="React Native">React Native</SelectItem>
+      <SelectItem value="Flutter">Flutter</SelectItem>
+
+      <SelectLabel>Other Technologies</SelectLabel>
+      <SelectItem value="Cybersecurity">Cybersecurity</SelectItem>
+      <SelectItem value="Blockchain">Blockchain</SelectItem>
+      <SelectItem value="Game Development">Game Development</SelectItem>
+      <SelectItem value="UI/UX Design">UI/UX Design</SelectItem>
+      <SelectItem value="Version Control (Git)">Version Control (Git)</SelectItem>
+      <SelectItem value="Software Testing">Software Testing</SelectItem>
+      <SelectItem value="API Development">API Development</SelectItem>
+    </SelectGroup>
+  </SelectContent>
+</Select>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={() => navigate("/admin/course")}>

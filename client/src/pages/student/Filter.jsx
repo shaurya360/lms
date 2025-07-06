@@ -13,17 +13,65 @@ import { Separator } from "@/components/ui/separator";
 import React, { useState } from "react";
 
 const categories = [
-  { id: "nextjs", label: "Next JS" },
-  { id: "data science", label: "Data Science" },
-  { id: "frontend development", label: "Frontend Development" },
-  { id: "fullstack development", label: "Fullstack Development" },
-  { id: "mern stack development", label: "MERN Stack Development" },
-  { id: "backend development", label: "Backend Development" },
-  { id: "javascript", label: "Javascript" },
-  { id: "python", label: "Python" },
-  { id: "docker", label: "Docker" },
-  { id: "mongodb", label: "MongoDB" },
-  { id: "html", label: "HTML" },
+  // Web Development
+  { id: "Frontend Development", label: "Frontend Development" },
+  { id: "Backend Development", label: "Backend Development" },
+  { id: "Fullstack Development", label: "Fullstack Development" },
+  
+  { id: "Next JS", label: "Next JS" },
+  { id: "React JS", label: "React JS" },
+  { id: "Angular", label: "Angular" },
+  { id: "Vue JS", label: "Vue JS" },
+  { id: "HTML", label: "HTML" },
+  { id: "CSS", label: "CSS" },
+  { id: "Tailwind CSS", label: "Tailwind CSS" },
+
+  // Programming Languages
+  { id: "Javascript", label: "Javascript" },
+  { id: "Python", label: "Python" },
+  { id: "Java", label: "Java" },
+  { id: "C#", label: "C#" },
+  { id: "GoLang", label: "GoLang" },
+  { id: "Rust", label: "Rust" },
+  { id: "PHP", label: "PHP" },
+  { id: "TypeScript", label: "TypeScript" },
+
+  // Data & AI
+  { id: "Data Science", label: "Data Science" },
+  { id: "Machine Learning", label: "Machine Learning" },
+  { id: "Deep Learning", label: "Deep Learning" },
+  { id: "Artificial Intelligence", label: "Artificial Intelligence" },
+  { id: "Data Analytics", label: "Data Analytics" },
+  { id: "Big Data", label: "Big Data" },
+  { id: "SQL", label: "SQL" },
+  { id: "NoSQL Databases", label: "NoSQL Databases" },
+  { id: "MongoDB", label: "MongoDB" },
+  { id: "PostgreSQL", label: "PostgreSQL" },
+
+  // Cloud & DevOps
+  { id: "Cloud Computing", label: "Cloud Computing" },
+  { id: "AWS", label: "AWS" },
+  { id: "Azure", label: "Azure" },
+  { id: "Google Cloud Platform", label: "Google Cloud Platform" },
+  { id: "DevOps", label: "DevOps" },
+  { id: "Docker", label: "Docker" },
+  { id: "Kubernetes", label: "Kubernetes" },
+  { id: "CI/CD", label: "CI/CD" },
+
+  // Mobile Development
+  { id: "Android Development", label: "Android Development" },
+  { id: "iOS Development", label: "iOS Development" },
+  { id: "React Native", label: "React Native" },
+  { id: "Flutter", label: "Flutter" },
+
+  // Other Technologies
+  { id: "Cybersecurity", label: "Cybersecurity" },
+  { id: "Blockchain", label: "Blockchain" },
+  { id: "Game Development", label: "Game Development" },
+  { id: "UI/UX Design", label: "UI/UX Design" },
+  { id: "Version Control (Git)", label: "Version Control (Git)" },
+  { id: "Software Testing", label: "Software Testing" },
+  { id: "API Development", label: "API Development" },
 ];
 
 const Filter = ({ handleFilterChange }) => {

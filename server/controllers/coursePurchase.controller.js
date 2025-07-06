@@ -3,70 +3,222 @@ import { Course } from "../models/course.model.js";
 import { CoursePurchase } from "../models/coursePurchase.model.js";
 import { Lecture } from "../models/lecture.model.js";
 import { User } from "../models/user.model.js";
+import { CourseProgress } from "../models/courseProgress.js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+function makeid(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
+// export const createCheckoutSession = async (req, res) => {
+//   try {
+//     const userId = req.id;
+//     const { courseId } = req.body;
+
+//     const course = await Course.findById(courseId);
+//     if (!course) return res.status(404).json({ message: "Course not found!" });
+
+//     // Create a new course purchase record
+//     const newPurchase = new CoursePurchase({
+//       courseId,
+//       userId,
+//       amount: course.coursePrice,
+//       status: "completed",
+//     });
+
+//     const success_url = `http://localhost:5173/course-progress/${courseId}`;
+//     const cancel_url  = `http://localhost:5173/course-detail/${courseId}`;
+
+    
+
+//     newPurchase.paymentId = makeid(15);
+
+//     await newPurchase.save();
+
+//     return res.status(200).json({
+//       success: true,
+//       url:success_url ,
+//       id: newPurchase.paymentId// Return the Stripe checkout URL
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+// export const createCheckoutSession = async (req, res) => {
+//     try {
+//         const userId = req.id;
+//         const { courseId } = req.body;
+
+//         const course = await Course.findById(courseId);
+//         if (!course) return res.status(404).json({ message: "Course not found!" });
+
+//         // Check if the user has already purchased this course to prevent duplicate entries
+//         const existingPurchase = await CoursePurchase.findOne({ userId, courseId, status: "completed" });
+//         if (existingPurchase) {
+//             return res.status(409).json({
+//                 success: false,
+//                 message: "You have already purchased this course."
+//             });
+//         }
+
+//         // Create a new course purchase record
+//         const newPurchase = new CoursePurchase({
+//             courseId,
+//             userId,
+//             amount: course.coursePrice,
+//             status: "completed", // Assuming 'completed' means the purchase is successful here
+//         });
+
+//         // Generate a payment ID
+//         newPurchase.paymentId = makeid(15);
+
+//         await newPurchase.save();
+
+//         // --- NEW LOGIC: Create Course Progress upon successful purchase ---
+//         // Prepare the initial lecture progress array
+//         const initialLectureProgress = course.lectures.map(lecture => ({
+//             lectureId: lecture._id, // Assuming lecture objects have an _id
+//             viewed: false,
+//         }));
+
+//         // Check if a CourseProgress record already exists for this user and course
+//         // This is a safety check, though for a new purchase, it should ideally not exist yet.
+//         let existingCourseProgress = await CourseProgress.findOne({ userId, courseId });
+
+//         if (existingCourseProgress) {
+//             // If it exists, update it (e.g., reset progress if re-purchased, though less common)
+//             // For now, we'll just ensure it's not completed and update lecture progress
+//             existingCourseProgress.completed = false;
+//             existingCourseProgress.lectureProgress = initialLectureProgress;
+//             await existingCourseProgress.save();
+//         } else {
+//             // Create a new CourseProgress record
+//             const newCourseProgress = new CourseProgress({
+//                 userId,
+//                 courseId,
+//                 completed: false, // Initially, the course is not completed
+//                 lectureProgress: initialLectureProgress, // All lectures marked as not viewed
+//             });
+//             await newCourseProgress.save();
+//         }
+//         // --- END NEW LOGIC ---
+
+//         const success_url = `http://localhost:5173/course-progress/${courseId}`;
+//         const cancel_url = `http://localhost:5173/course-detail/${courseId}`; // This variable is not used but kept for context
+
+//         return res.status(200).json({
+//             success: true,
+//             message: "Course purchased successfully and progress initialized.",
+//             url: success_url,
+//             id: newPurchase.paymentId // Return the payment ID
+//         });
+//     } catch (error) {
+//         console.error("Error creating checkout session:", error); // Use console.error for errors
+//         return res.status(500).json({
+//             success: false,
+//             message: "Failed to process course purchase."
+//         });
+//     }
+// };
+
 
 export const createCheckoutSession = async (req, res) => {
-  try {
-    const userId = req.id;
-    const { courseId } = req.body;
+    try {
+        const userId = req.id;
+        const { courseId } = req.body;
 
-    const course = await Course.findById(courseId);
-    if (!course) return res.status(404).json({ message: "Course not found!" });
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ message: "Course not found!" });
+        }
 
-    // Create a new course purchase record
-    const newPurchase = new CoursePurchase({
-      courseId,
-      userId,
-      amount: course.coursePrice,
-      status: "pending",
-    });
+        // --- Start of existing and new logic for purchase and progress ---
 
-    // Create a Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency: "inr",
-            product_data: {
-              name: course.courseTitle,
-              images: [course.courseThumbnail],
-            },
-            unit_amount: course.coursePrice * 100, // Amount in paise (lowest denomination)
-          },
-          quantity: 1,
-        },
-      ],
-      mode: "payment",
-      success_url: `http://localhost:5173/course-progress/${courseId}`, // once payment successful redirect to course progress page
-      cancel_url: `http://localhost:5173/course-detail/${courseId}`,
-      metadata: {
-        courseId: courseId,
-        userId: userId,
-      },
-      shipping_address_collection: {
-        allowed_countries: ["IN"], // Optionally restrict allowed countries
-      },
-    });
+        // 1. Check if the user has already purchased this course to prevent duplicate entries
+        const existingPurchase = await CoursePurchase.findOne({ userId, courseId, status: "completed" });
+        if (existingPurchase) {
+            return res.status(409).json({
+                success: false,
+                message: "You have already purchased this course."
+            });
+        }
 
-    if (!session.url) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Error while creating session" });
+        // 2. Create a new course purchase record
+        const newPurchase = new CoursePurchase({
+            courseId,
+            userId,
+            amount: course.coursePrice,
+            status: "completed", // Assuming 'completed' means the purchase is successful here
+        });
+
+        // Generate a payment ID
+        newPurchase.paymentId = makeid(15);
+        await newPurchase.save();
+
+        // 3. Create/Update Course Progress upon successful purchase
+        // Prepare the initial lecture progress array
+        const initialLectureProgress = course.lectures.map(lecture => ({
+            lectureId: lecture._id, // Assuming lecture objects have an _id
+            viewed: false,
+        }));
+
+        let existingCourseProgress = await CourseProgress.findOne({ userId, courseId });
+
+        if (existingCourseProgress) {
+            // If it exists, update it (e.g., reset progress if re-purchased)
+            existingCourseProgress.completed = false;
+            existingCourseProgress.lectureProgress = initialLectureProgress;
+            await existingCourseProgress.save();
+        } else {
+            // Create a new CourseProgress record
+            const newCourseProgress = new CourseProgress({
+                userId,
+                courseId,
+                completed: false, // Initially, the course is not completed
+                lectureProgress: initialLectureProgress, // All lectures marked as not viewed
+            });
+            await newCourseProgress.save();
+        }
+
+        // --- NEW LOGIC: Add course ID to User's enrolledCourses ---
+        const user = await User.findById(userId);
+
+        if (!user) {
+            // This case should ideally not happen if req.id is reliable
+            return res.status(404).json({
+                success: false,
+                message: "User not found after purchase, contact support."
+            });
+        }
+
+        // Use $addToSet to add courseId to enrolledCourses if it's not already there
+        // This prevents duplicate course IDs in the array
+        user.enrolledCourses.addToSet(courseId); // Mongoose's addToSet method
+        await user.save();
+        // --- END NEW LOGIC ---
+
+        const success_url = `http://localhost:5173/course-progress/${courseId}`;
+        const cancel_url = `http://localhost:5173/course-detail/${courseId}`; // This variable is not used but kept for context
+
+        return res.status(200).json({
+            success: true,
+            message: "Course purchased successfully, progress initialized, and user enrolled.",
+            url: success_url,
+            id: newPurchase.paymentId
+        });
+    } catch (error) {
+        console.error("Error creating checkout session:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to process course purchase."
+        });
     }
-
-    // Save the purchase record
-    newPurchase.paymentId = session.id;
-    await newPurchase.save();
-
-    return res.status(200).json({
-      success: true,
-      url: session.url, // Return the Stripe checkout URL
-    });
-  } catch (error) {
-    console.log(error);
-  }
 };
 
 export const stripeWebhook = async (req, res) => {

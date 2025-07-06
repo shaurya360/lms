@@ -3,6 +3,7 @@ import { Course } from "../models/course.model.js";
 import { Lecture } from "../models/lecture.model.js";
 import {deleteMediaFromCloudinary, deleteVideoFromCloudinary, uploadMedia} from "../utils/cloudinary.js";
 
+
 export const createCourse = async (req,res) => {
     try {
         const {courseTitle, category} = req.body;
@@ -79,6 +80,7 @@ export const getPublishedCourse = async (_,res) => {
                 message:"Course not found"
             })
         }
+        
         return res.status(200).json({
             courses,
         })
